@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Home Page!!";
+    Layout = "IndexLayout.cshtml";
+}
+
+<h1>This is home</h1>
+
+@Html.ActionLink("About Us", "About", controllerName: "Home")
+
+@{
+    Html.RenderAction("About", "Home");
+}
