@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Optimization;
@@ -9,18 +7,21 @@ namespace HelloMvcBundle
 {
     public static class MvcBundle
     {
+        private static IHtmlString Empty = new HtmlString("");
+        private static string ScriptBundleKey = "script:bundle";
+
         public static IHtmlString RenderScript(string path)
         {
             var bundleId = "script-bundle" + new Regex(@"\W+").Replace(path, "-").ToLower();
-            var count = HttpContext.Current.Items[bundleId] as int?;
-            count = (count ?? 0) + 1;
-            HttpContext.Current.Items[bundleId] = count;
-
-            if(count == 1)
+            var bundle = Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "'>{0}</script>", path);
+            var bundles = HttpContext.Current.Items[ScriptBundleKey] as List<IHtmlString>;
+            if(bundles == null)
             {
-                return Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "'>{0}</script>", path);
+                bundles = new List<IHtmlString>();
+                HttpContext.Current.Items[ScriptBundleKey] = bundles;
             }
-            return new HtmlString(string.Format("<!-- {0} -->", bundleId + " is rendered the "+count+"-th time"));
+            bundles.Add(bundle);
+            return Empty;
         }
     }
 }
