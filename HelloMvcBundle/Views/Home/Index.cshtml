@@ -1,4 +1,6 @@
-﻿@{
+﻿@using System.Reflection;
+
+@{
     ViewBag.Title = "Home Page!!";
     Layout = "IndexLayout.cshtml";
 }
@@ -7,3 +9,22 @@
 
 @Html.ActionLink("About Us", "About", controllerName: "Home")
 
+@{ 
+    var assembly = Assembly.GetExecutingAssembly();
+
+    <h3>All Controllers defined in @assembly.FullName </h3>
+    <p>@assembly.Location</p>
+    <ul>
+    @foreach(var t in assembly.DefinedTypes)
+    {
+        if(typeof(WebPageBase).IsAssignableFrom(t))
+        {
+            <li style="color:blue">@t.Name</li>
+        }
+        else
+        {
+            <li>@t.FullName</li>
+        }
+    }
+    </ul>
+}

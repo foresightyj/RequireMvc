@@ -18,7 +18,7 @@ namespace HelloMvcBundle
 
             if (count == 1)
             {
-                return Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "'>{0}</script>", path);
+                return Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "' src='{0}'></script>", path);
             }
             return new HtmlString(string.Format("<!-- {0} -->", bundleId + " is rendered the " + count + "-th time"));
         }
