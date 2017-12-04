@@ -7,21 +7,20 @@ namespace HelloMvcBundle
 {
     public static class MvcBundle
     {
-        private static IHtmlString Empty = new HtmlString("");
         private static string ScriptBundleKey = "script-bundle";
 
         public static IHtmlString RenderScript(string path)
         {
             var bundleId = ScriptBundleKey + new Regex(@"\W+").Replace(path, "-").ToLower();
-            var bundle = Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "'>{0}</script>", path);
-            var bundles = HttpContext.Current.Items[ScriptBundleKey] as List<IHtmlString>;
-            if(bundles == null)
+            var count = HttpContext.Current.Items[bundleId] as int?;
+            count = (count ?? 0) + 1;
+            HttpContext.Current.Items[bundleId] = count;
+
+            if (count == 1)
             {
-                bundles = new List<IHtmlString>();
-                HttpContext.Current.Items[ScriptBundleKey] = bundles;
+                return Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "'>{0}</script>", path);
             }
-            bundles.Add(bundle);
-            return Empty;
+            return new HtmlString(string.Format("<!-- {0} -->", bundleId + " is rendered the " + count + "-th time"));
         }
     }
 }
