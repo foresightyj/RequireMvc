@@ -8,11 +8,11 @@ namespace HelloMvcBundle
     public static class MvcBundle
     {
         private static IHtmlString Empty = new HtmlString("");
-        private static string ScriptBundleKey = "script:bundle";
+        private static string ScriptBundleKey = "script-bundle";
 
         public static IHtmlString RenderScript(string path)
         {
-            var bundleId = "script-bundle" + new Regex(@"\W+").Replace(path, "-").ToLower();
+            var bundleId = ScriptBundleKey + new Regex(@"\W+").Replace(path, "-").ToLower();
             var bundle = Scripts.RenderFormat("<script type='text/javascript' class='" + bundleId + "'>{0}</script>", path);
             var bundles = HttpContext.Current.Items[ScriptBundleKey] as List<IHtmlString>;
             if(bundles == null)
